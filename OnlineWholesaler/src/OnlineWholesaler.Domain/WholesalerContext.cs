@@ -14,6 +14,5 @@ namespace OnlineWholesaler.Domain
         { }
 
         public DbSet<Article> Articles { get; set; }
-        public static string Dupa => "Dupa";
     }
 }
