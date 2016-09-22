@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OnlineWholesaler.Domain;
 using OnlineWholesaler.Domain.Entities;
 using OnlineWholesaler.Domain.Repositories;
+using Shouldly;
 using Xunit;
 
 namespace OnlineWholesaler.Tests.RepositoriesTests
@@ -22,7 +23,7 @@ namespace OnlineWholesaler.Tests.RepositoriesTests
             var dbContext = CreateAndSeedContext();
             var sut = new WholesalerRepository<Article>(dbContext);
             var findedObject = sut.GetByID(3);
-            Assert.True(findedObject.Name == "Onion");
+            findedObject.Name.ShouldBe("Onion");
         }
 
         [Fact]
@@ -31,15 +32,13 @@ namespace OnlineWholesaler.Tests.RepositoriesTests
             var dbContext = CreateAndSeedContext();
             var sut = new WholesalerRepository<Article>(dbContext);
             var findedObject = sut.Get();
-            var dupa = dbContext.Articles.Where(e => e.Id == 3).FirstOrDefault().Name;
-            Assert.True(findedObject.Count() == 7);
+            findedObject.Count().ShouldBe(7);
         }
 
         private WholesalerContext CreateAndSeedContext()
         {
-            //var serviceProvider = new ServiceCollection().AddEntityFrameworkInMemoryDatabase().BuildServiceProvider();
             var optionsBuilder = new DbContextOptionsBuilder<WholesalerContext>();
-            optionsBuilder.UseInMemoryDatabase();//.UseInternalServiceProvider(serviceProvider);
+            optionsBuilder.UseInMemoryDatabase();
 
             var context = new WholesalerContext(optionsBuilder.Options);
             context.Database.EnsureDeleted();
