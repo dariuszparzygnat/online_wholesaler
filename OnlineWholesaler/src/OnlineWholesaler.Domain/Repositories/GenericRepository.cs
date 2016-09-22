@@ -10,7 +10,7 @@ namespace OnlineWholesaler.Domain.Repositories
     {
         internal TContext context;
         internal DbSet<TEntity> dbSet;
-
+        
         public GenericRepository(TContext context)
         {
             this.context = context;

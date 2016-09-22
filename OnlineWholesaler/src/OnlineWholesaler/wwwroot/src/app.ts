@@ -1,19 +1,13 @@
-﻿import {inject} from "aurelia-framework";
-import {Router} from "aurelia-router";
-
-@inject(Router)
-export class App {
-    router: Router;
-
-    constructor() { }
-
-    configureRouter(config, router: Router) {
-        this.router = router;
-
-        config.title = "AureliaTSapp";
-        //config.map([
-        //    { route: ["", "todos"], moduleId: "./views/values", nav: true, title: "Values" },
-
-        //]);
+﻿export class App {
+    constructor() {
     }
+
+    configureRouter(config, router) {
+        this.router = router;
+        config.title = "Strona główna";
+        config.map([{ route: [''], moduleId: 'src/articles/articles', title: 'Main page', nav: true }
+            ]);
+    }
+
+    router;
 }

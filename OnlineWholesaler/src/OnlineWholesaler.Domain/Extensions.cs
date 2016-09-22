@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace OnlineWholesaler.Domain
 {
@@ -81,31 +82,36 @@ namespace OnlineWholesaler.Domain
 
         public static TEntity Find<TEntity>(this DbSet<TEntity> set, params object[] keyValues) where TEntity : class
         {
-            var context = ((IInfrastructure<IServiceProvider>)set).GetService<DbContext>();
-
+            var context = set.GetService<ICurrentDbContext>().Context;
             var entityType = context.Model.FindEntityType(typeof(TEntity));
             var key = entityType.FindPrimaryKey();
 
             var entries = context.ChangeTracker.Entries<TEntity>();
 
+            //first, check if the entity exists in the cache
             var i = 0;
+
+            //iterate through the key properties
             foreach (var property in key.Properties)
             {
-                entries = Enumerable.Where(entries, e => e.Property(property.Name).CurrentValue == keyValues[i]);
+                var keyValue = keyValues[i];
+
+                //try to get the entity from the local cache
+                entries = entries.Where(e => keyValue.Equals(e.Property(property.Name).CurrentValue));
                 i++;
             }
 
-            var entry = entries.FirstOrDefault();
-            if (entry != null)
+            var entity = entries.Select(x => x.Entity).FirstOrDefault();
+
+            if (entity != null)
             {
-                // Return the local object if it exists.
-                return entry.Entity;
+                return entity;
             }
 
             // TODO: Build the real LINQ Expression
             // set.Where(x => x.Id == keyValues[0]);
             var parameter = Expression.Parameter(typeof(TEntity), "x");
-            var query = Queryable.Where(set, (Expression<Func<TEntity, bool>>)
+            var query = set.Where((Expression<Func<TEntity, bool>>)
                 Expression.Lambda(
                     Expression.Equal(
                         Expression.Property(parameter, "Id"),
@@ -113,7 +119,9 @@ namespace OnlineWholesaler.Domain
                     parameter));
 
             // Look in the database
-            return query.FirstOrDefault();
+            entity = query.FirstOrDefault();
+
+            return entity;
         }
     }
 }

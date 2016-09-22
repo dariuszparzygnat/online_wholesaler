@@ -11,11 +11,16 @@
     }
   },
   "dependencies": {
+    "Microsoft.EntityFrameworkCore.InMemory": "1.0.1",
     "Microsoft.NETCore.App": {
       "version": "1.0.0",
       "type": "platform"
     },
     "OnlineWholesaler": "1.0.0-*",
-    "xunit.core": "2.1.0"
-  }
+    "dotnet-test-xunit": "1.0.0-rc2-build10015",
+    "xunit.core": "2.1.0",
+    "xunit.assert": "2.1.0",
+    "xunit.runner.visualstudio": "2.1.0"
+  },
+  "testRunner": "xunit"
 }
