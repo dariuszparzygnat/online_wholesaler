@@ -3,17 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.v3;
+using OnlineWholesaler.Articles;
+using OnlineWholesaler.Domain;
+using OnlineWholesaler.Domain.Entities;
 
 namespace OnlineWholesaler.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class ArticlesController : Controller
     {
+        private IArticlesUnitOfWork _unitOfWork;
+
+        public ArticlesController(IArticlesUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Article> Get()
         {
-            return new string[] { "value1", "value2" };
+            return _unitOfWork.GetArticles();
         }
 
         // GET api/values/5
@@ -39,6 +49,12 @@ namespace OnlineWholesaler.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _unitOfWork.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
