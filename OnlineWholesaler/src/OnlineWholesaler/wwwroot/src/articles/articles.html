@@ -1,8 +1,5 @@
 ﻿<template>
-    <ul>
-        <li repeat.for="article of articles">
-            <h1>${article.name}</h1>
-            <h2>${article.description}</h2>
-        </li>
-    </ul>
+    <div repeat.for="article of articles">
+        <compose model.bind="article" view-model="src/articles/article"></compose>
+    </div>
 </template>

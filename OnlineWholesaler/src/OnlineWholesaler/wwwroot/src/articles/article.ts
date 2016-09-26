@@ -6,8 +6,13 @@
         this.imgpath = imgpath;
     }
 
+    activate(model) {
+        this.model = model;
+    }
+
     description;
     imgpath;
     name;
     id;
+    model;
 }
