@@ -28,8 +28,23 @@ var ArticlesRepository = (function () {
         });
         return promise;
     };
+    ArticlesRepository.prototype.addArticle = function (article) {
+        var _this = this;
+        var promise = new Promise(function (resolve, reject) {
+            _this.httpFetch.fetch(_this.apiRoot + 'api/articles', {
+                method: 'POST',
+                body: aurelia_fetch_client_1.json(article)
+            }).then(function (response) { return response.json(); })
+                .then(function (data) {
+                _this.articles.push(data);
+                resolve(data);
+            }).catch(function (err) { return reject(err); });
+        });
+        return promise;
+    };
     ArticlesRepository = __decorate([
-        aurelia_framework_1.inject('apiRoot', aurelia_fetch_client_1.HttpClient)
+        aurelia_framework_1.inject('apiRoot', aurelia_fetch_client_1.HttpClient),
+        aurelia_framework_1.singleton()
     ], ArticlesRepository);
     return ArticlesRepository;
 }());

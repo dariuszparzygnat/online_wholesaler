@@ -34,9 +34,25 @@ namespace OnlineWholesaler.Controllers
         }
 
         // POST api/values
+        //[HttpPost]
+        //public void Post([FromBody]string value)
+        //{
+        //}
+
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody]Article article)
         {
+            if (article == null) return BadRequest();
+            try
+            {
+                _unitOfWork.AddArticle(article);
+                _unitOfWork.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok(article);
         }
 
         // PUT api/values/5

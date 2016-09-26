@@ -65,5 +65,15 @@ namespace OnlineWholesaler.Articles
         {
             return ArticlesRepository.GetByID(articleId);
         }
+
+        public void AddArticle(Article article)
+        {
+            ArticlesRepository.Insert(article);
+        }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
     }
 }

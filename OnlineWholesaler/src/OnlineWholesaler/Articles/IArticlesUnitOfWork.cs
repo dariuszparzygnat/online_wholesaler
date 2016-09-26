@@ -11,5 +11,7 @@ namespace OnlineWholesaler.Articles
         IEnumerable<Article> GetArticles(string articleName);
         IEnumerable<Article> GetArticles();
         Article GetArticle(int articleId);
+        void AddArticle(Article article);
+        void SaveChanges();
     }
 }

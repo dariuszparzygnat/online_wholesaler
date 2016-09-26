@@ -1,7 +1,9 @@
-﻿import {inject} from 'aurelia-framework';
-import {HttpClient as HttpFetch} from 'aurelia-fetch-client';
+﻿import {inject, singleton} from 'aurelia-framework';
+import {HttpClient as HttpFetch, json} from 'aurelia-fetch-client';
+import {Article} from "./article";
 
 @inject('apiRoot', HttpFetch)
+@singleton()
 export class ArticlesRepository {
     constructor(apiRoot, httpFetch) {
         this.apiRoot = apiRoot;
@@ -25,5 +27,19 @@ export class ArticlesRepository {
 
     httpFetch;
     apiRoot;
-    articles;
+    articles: Article[];
+
+    addArticle(article: Article) {
+        var promise = new Promise((resolve, reject) => {
+            this.httpFetch.fetch(this.apiRoot + 'api/articles', {
+                method: 'POST',
+                body: json(article)
+            }).then(response => response.json())
+                .then(data => {
+                    this.articles.push(data);
+                    resolve(data);
+                }).catch(err => reject(err));
+        });
+        return promise;
+    }
 }
